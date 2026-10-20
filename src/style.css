@@ -1,0 +1,758 @@
+/* ---------------------------------------------------------------
+   Design tokens, sampled from wisprflow.ai's live computed styles
+   --------------------------------------------------------------- */
+:root {
+  --paper: #ffffeb;
+  --ink: #1a1a1a;
+  --green: #034f46;
+  --lavender: #f0d7ff;
+  --sand: #e4e4d0;
+  --amber: #ffa946;
+  --white: #ffffff;
+
+  --ink-70: rgba(26, 26, 26, 0.7);
+  --ink-50: rgba(26, 26, 26, 0.5);
+  --ink-12: rgba(26, 26, 26, 0.12);
+  --paper-70: rgba(255, 255, 235, 0.7);
+  --paper-20: rgba(255, 255, 235, 0.2);
+
+  --r-card: 32px;
+  --r-pill: 100px;
+  --r-panel: 48px;
+  --r-sm: 8px;
+
+  --gutter: 24px;
+  --maxw: 1180px;
+
+  --serif: "EB Garamond", Georgia, serif;
+  --sans: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+/* ---------------------------------------------------------------
+   Layout primitives
+   --------------------------------------------------------------- */
+.wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+  margin: 0 0 22px;
+}
+
+.display {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  margin: 0;
+  font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+  max-width: 17ch;
+}
+
+.display em {
+  font-style: italic;
+}
+
+.lede {
+  font-size: clamp(1.0625rem, 1.9vw, 1.3125rem);
+  line-height: 1.52;
+  color: var(--ink-70);
+  max-width: 44ch;
+  margin: 26px 0 0;
+}
+
+.lede strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------
+   Buttons
+   --------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 26px;
+  border-radius: var(--r-pill);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: transform 0.35s var(--ease), background 0.35s var(--ease),
+    border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--lavender);
+  color: var(--ink);
+  border-color: rgba(26, 26, 26, 0.14);
+  box-shadow: 0 1px 0 rgba(26, 26, 26, 0.06);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(26, 26, 26, 0.12);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink-12);
+}
+
+.btn-ghost:hover {
+  transform: translateY(-2px);
+  border-color: rgba(26, 26, 26, 0.3);
+}
+
+/* ---------------------------------------------------------------
+   Announcement bar
+   --------------------------------------------------------------- */
+.ribbon {
+  background: var(--green);
+  color: var(--paper);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: center;
+  padding: 9px var(--gutter);
+  letter-spacing: 0.005em;
+}
+
+.ribbon em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+}
+
+/* ---------------------------------------------------------------
+   Nav
+   --------------------------------------------------------------- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(255, 255, 235, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.4s var(--ease);
+}
+
+.nav.is-stuck {
+  border-bottom-color: var(--ink-12);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  height: 68px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15.5px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.nav-links a {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink-70);
+  text-decoration: none;
+  transition: color 0.3s var(--ease);
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+}
+
+/* ---------------------------------------------------------------
+   Hero
+   --------------------------------------------------------------- */
+.hero {
+  position: relative;
+  padding: clamp(56px, 9vw, 104px) 0 clamp(64px, 9vw, 112px);
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.hero-meta {
+  margin: 26px 0 0;
+  font-size: 13.5px;
+  color: var(--ink-50);
+}
+
+/* Floating evidence card, echoing their angled card treatment */
+.float-card {
+  background: var(--white);
+  border-radius: var(--r-card);
+  border: 1px solid var(--ink-12);
+  padding: 30px 32px 32px;
+  box-shadow: 0 24px 60px -28px rgba(26, 26, 26, 0.3);
+  transform: rotate(-1.6deg);
+}
+
+.float-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.float-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+  margin: 0;
+}
+
+.float-card-tag {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: var(--r-pill);
+  background: var(--lavender);
+  color: var(--ink);
+}
+
+.bar-row {
+  margin-bottom: 20px;
+}
+
+.bar-row:last-of-type {
+  margin-bottom: 0;
+}
+
+.bar-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 14.5px;
+  margin-bottom: 9px;
+}
+
+.bar-label span:first-child {
+  font-weight: 500;
+}
+
+.bar-label span:last-child {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.bar-track {
+  height: 10px;
+  border-radius: var(--r-pill);
+  background: var(--sand);
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  width: 0;
+  transition: width 1.1s var(--ease);
+}
+
+.bar-fill.is-strong {
+  background: var(--green);
+}
+
+.bar-fill.is-weak {
+  background: var(--amber);
+}
+
+.float-card-note {
+  margin: 24px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--ink-12);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-70);
+}
+
+.float-card-note strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------
+   Reveal animation, opt-out safe
+   --------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
+}
+
+/* ---------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 44px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .float-card {
+    transform: none;
+  }
+
+  .lede {
+    max-width: none;
+  }
+}
+
+@media (max-width: 520px) {
+  :root {
+    --gutter: 18px;
+    --r-card: 24px;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  .float-card {
+    padding: 24px 22px 26px;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Reduced motion
+   --------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .float-card {
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Sections
+   --------------------------------------------------------------- */
+.section {
+  padding: clamp(64px, 9vw, 120px) 0;
+}
+
+.section-head {
+  max-width: 62ch;
+  margin-bottom: clamp(36px, 5vw, 60px);
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.4vw, 3.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  margin: 0;
+}
+
+.section-title em {
+  font-style: italic;
+}
+
+.prose {
+  font-size: clamp(1rem, 1.6vw, 1.125rem);
+  line-height: 1.65;
+  color: var(--ink-70);
+  margin: 20px 0 0;
+  max-width: 66ch;
+}
+
+.prose strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Proof strip --------------------------------------------------- */
+.strip {
+  border-top: 1px solid var(--ink-12);
+  border-bottom: 1px solid var(--ink-12);
+  padding: clamp(32px, 4.5vw, 52px) 0;
+}
+
+.strip-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 44px);
+}
+
+.stat-n {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.7vw, 2.9rem);
+  line-height: 1;
+  font-weight: 500;
+  margin: 0 0 10px;
+  letter-spacing: -0.015em;
+}
+
+.stat-l {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-70);
+  margin: 0;
+}
+
+.stat-src {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+}
+
+/* Case cards ----------------------------------------------------- */
+.cases {
+  display: grid;
+  gap: clamp(18px, 2.4vw, 26px);
+}
+
+.case {
+  background: var(--white);
+  border: 1px solid var(--ink-12);
+  border-radius: var(--r-card);
+  padding: clamp(28px, 3.6vw, 44px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+
+.case-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+  margin: 0 0 14px;
+}
+
+.case-kicker b {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.case h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.7vw, 2rem);
+  line-height: 1.16;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.case .prose {
+  font-size: 16.5px;
+  margin-top: 16px;
+}
+
+.case-metric {
+  background: var(--paper);
+  border: 1px solid var(--ink-12);
+  border-radius: var(--r-card);
+  padding: 26px 26px 28px;
+}
+
+.case-metric-n {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 4.6vw, 3.4rem);
+  line-height: 0.98;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+
+.case-metric-n small {
+  font-size: 0.42em;
+  font-family: var(--sans);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-50);
+  display: block;
+  margin-top: 10px;
+}
+
+.case-metric-l {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-70);
+  margin: 0;
+}
+
+/* Dark panel ----------------------------------------------------- */
+.panel {
+  background: var(--green);
+  color: var(--paper);
+  border-radius: var(--r-panel);
+  padding: clamp(40px, 6.5vw, 86px) clamp(28px, 5vw, 76px);
+  margin: clamp(16px, 3vw, 40px) 0;
+}
+
+.panel .section-title {
+  color: var(--paper);
+}
+
+.panel .prose {
+  color: var(--paper-70);
+}
+
+.panel .prose strong {
+  color: var(--paper);
+}
+
+.panel-quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+  line-height: 1.34;
+  color: var(--paper);
+  margin: 36px 0 0;
+  padding-top: 32px;
+  border-top: 1px solid var(--paper-20);
+  max-width: 48ch;
+}
+
+/* Record list ---------------------------------------------------- */
+.record {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--ink-12);
+}
+
+.record-row {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) auto;
+  gap: clamp(16px, 3vw, 40px);
+  align-items: baseline;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--ink-12);
+}
+
+.record-when {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+}
+
+.record-what {
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--ink-70);
+  margin: 0;
+}
+
+.record-what b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.record-n {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Tool pills ----------------------------------------------------- */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pills li {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 17px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ink-12);
+  background: var(--white);
+}
+
+/* Contact -------------------------------------------------------- */
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.foot {
+  border-top: 1px solid var(--ink-12);
+  padding: 30px 0 46px;
+  font-size: 13.5px;
+  color: var(--ink-50);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  justify-content: space-between;
+}
+
+.foot a {
+  color: var(--ink-70);
+  text-decoration: none;
+}
+
+.foot a:hover {
+  color: var(--ink);
+}
+
+/* Responsive ----------------------------------------------------- */
+@media (max-width: 900px) {
+  .strip-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px 24px;
+  }
+
+  .case {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  .record-row {
+    grid-template-columns: 1fr auto;
+    gap: 6px 18px;
+  }
+
+  .record-when {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 520px) {
+  .strip-grid {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  .panel {
+    border-radius: var(--r-card);
+  }
+
+  .record-row {
+    grid-template-columns: 1fr;
+  }
+
+  .record-n {
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 620px) {
+  .ribbon em {
+    display: none;
+  }
+}
