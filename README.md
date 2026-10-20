@@ -20,3 +20,16 @@ npm run build
 ```
 
 Deploys to GitHub Pages from `main` via `.github/workflows/deploy.yml`.
+
+## Deploying
+
+The built site is published to the `gh-pages` branch.
+
+```bash
+npm run build
+git push origin `git subtree split --prefix dist main`:gh-pages --force
+```
+
+To switch to GitHub Actions instead, run `gh auth refresh -s workflow` once,
+then move `deploy/github-pages-workflow.yml.txt` to
+`.github/workflows/deploy.yml` and push.
