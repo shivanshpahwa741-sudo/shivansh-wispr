@@ -87,8 +87,8 @@ a {
   letter-spacing: -0.015em;
   line-height: 1.08;
   margin: 0;
-  font-size: clamp(2.1rem, 4.4vw, 3.5rem);
-  max-width: 17ch;
+  font-size: clamp(2.9rem, 7.4vw, 5.6rem);
+  max-width: 15ch;
 }
 
 .display em {
@@ -97,10 +97,10 @@ a {
 
 .lede {
   font-size: clamp(1.0625rem, 1.9vw, 1.3125rem);
-  line-height: 1.52;
+  line-height: 1.5;
   color: var(--ink-70);
-  max-width: 44ch;
-  margin: 26px 0 0;
+  max-width: 40ch;
+  margin: 26px auto 0;
 }
 
 .lede strong {
@@ -237,18 +237,19 @@ a {
   overflow: hidden;
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
-  gap: clamp(32px, 5vw, 72px);
+.hero-centre {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
-  margin-top: 34px;
+  margin-top: 36px;
 }
 
 .hero-meta {
@@ -373,15 +374,6 @@ a {
    Responsive
    --------------------------------------------------------------- */
 @media (max-width: 900px) {
-  .hero-grid {
-    grid-template-columns: 1fr;
-    gap: 44px;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
   .float-card {
     transform: none;
   }
@@ -801,14 +793,14 @@ a {
 
 .flow-raw {
   font-family: var(--serif);
-  font-size: 20px;
-  fill: rgba(26, 26, 26, 0.36);
+  font-size: 31px;
+  fill: rgba(26, 26, 26, 0.38);
   letter-spacing: 0.005em;
 }
 
 .flow-clean {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: 31px;
   fill: var(--paper);
   letter-spacing: 0.005em;
 }
@@ -816,7 +808,7 @@ a {
 .flow-ribbon {
   fill: none;
   stroke: var(--ink);
-  stroke-width: 52;
+  stroke-width: 64;
   stroke-linecap: round;
 }
 
@@ -834,7 +826,7 @@ a {
 @media (max-width: 820px) {
   .flow-raw,
   .flow-clean {
-    font-size: 26px;
+    font-size: 34px;
   }
 
 }
@@ -972,5 +964,81 @@ a {
 @media (prefers-reduced-motion: reduce) {
   .voice-card {
     transform: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Nav actions and the offer button
+   --------------------------------------------------------------- */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-offer {
+  background: var(--green);
+  color: var(--paper);
+  border-color: var(--green);
+}
+
+.btn-offer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(3, 79, 70, 0.3);
+}
+
+.btn-lg {
+  padding: 17px 34px;
+  font-size: 16px;
+}
+
+/* ---------------------------------------------------------------
+   Voices: cards hover and drift
+   --------------------------------------------------------------- */
+.voice-card {
+  animation: voiceFloat 7.5s ease-in-out infinite;
+  box-shadow: 0 30px 60px -34px rgba(0, 0, 0, 0.75);
+  transition: box-shadow 0.5s var(--ease);
+}
+
+.voice-card[data-float='1'] {
+  animation-duration: 9.5s;
+  animation-delay: -3.2s;
+}
+
+.voice-card:hover {
+  box-shadow: 0 46px 90px -36px rgba(0, 0, 0, 0.85);
+}
+
+@keyframes voiceFloat {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -14px;
+  }
+}
+
+.voice-body blockquote br {
+  content: '';
+  display: block;
+  margin-bottom: 2px;
+}
+
+@media (max-width: 620px) {
+  .nav-actions .btn {
+    padding: 11px 16px;
+    font-size: 13.5px;
+  }
+
+  .brand {
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-card {
+    animation: none;
   }
 }

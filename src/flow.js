@@ -2,38 +2,54 @@
    Hero flow band.
 
    Same idea as Flow's own hero: text set on an SVG <textPath> and
-   scrolled along a curve. Raw phrasing rides the loop on the left in
-   muted ink, passes through the mark, and leaves on the right in cream
-   on a black ribbon.
+   scrolled along a curve. "unstructured data" rides the loop on the
+   left, passes through the mark, and leaves on the right as
+   "actionable insights" in cream on a black ribbon.
+
+   Travel runs forward along each path, so the text moves toward the
+   mark and then away from it, the direction the curves are drawn.
 
    Driven from requestAnimationFrame rather than SMIL. SMIL's document
    timeline would not start in testing: animationsPaused() reported
    false while getCurrentTime() stayed pinned at zero, and
-   unpauseAnimations() did not revive it. A rAF loop is also easier to
-   stop precisely when the band is offscreen or the tab is hidden.
+   unpauseAnimations() did not revive it.
 
-   Seamlessness: startOffset is measured in user units, so the phrase is
-   repeated and the offset wraps by exactly one repeat width. Shifting by
-   one whole repeat looks identical to not shifting, so there is no seam.
+   No visible reset: the number of repeats is computed from the real
+   path length so the phrase always overruns the curve, and the offset
+   wraps by exactly one measured repeat width. Shifting by one whole
+   repeat looks identical to not shifting at all.
    ------------------------------------------------------------------ */
 
 const RAW_UNIT = 'unstructured data   ·   '
 const CLEAN_UNIT = 'actionable insights   ·   '
 
-const REPEATS = 14
-
-// User units per second. Slightly different per curve, the way their
-// two chains run at different durations.
-const RAW_SPEED = 30
-const CLEAN_SPEED = 24
+// User units per second.
+const RAW_SPEED = 78
+const CLEAN_SPEED = 64
 
 const MAX_STEP = 0.05 // clamp the delta so a backgrounded tab cannot jump
 
+/**
+ * Fills a textPath with enough repeats to overrun its curve, and
+ * returns the width of a single repeat.
+ */
 function fill(textPath, unit) {
-  if (!textPath) return 0
-  textPath.textContent = unit.repeat(REPEATS)
-  const total = textPath.getComputedTextLength()
-  return total ? total / REPEATS : 0
+  const pathId = textPath.dataset.path
+  const path = pathId && document.getElementById(pathId)
+  if (!path) return 0
+
+  // Measure one repeat first.
+  textPath.textContent = unit
+  const unitLen = textPath.getComputedTextLength()
+  if (!unitLen) return 0
+
+  // Overrun the curve by a full extra screen of text in both
+  // directions, so a wrap can never expose the end of the string.
+  const pathLen = path.getTotalLength()
+  const repeats = Math.ceil(pathLen / unitLen) + 3
+
+  textPath.textContent = unit.repeat(repeats)
+  return unitLen
 }
 
 export function initFlow(band, reduceMotion) {
@@ -49,8 +65,9 @@ export function initFlow(band, reduceMotion) {
   const measure = () => {
     tracks.forEach((t) => {
       t.unitLen = fill(t.el, t.unit)
-      t.offset = t.offset ?? 0
-      t.el.setAttribute('startOffset', t.offset.toFixed(2))
+      // Start one repeat back so the curve is already full at frame one.
+      t.offset = t.offset ?? -(t.unitLen || 0)
+      t.el.setAttribute('startOffset', (t.offset || 0).toFixed(2))
     })
   }
 
@@ -72,13 +89,16 @@ export function initFlow(band, reduceMotion) {
       // The first measurement can come back zero if it lands before the
       // web font and the first layout. Retry rather than sit still.
       if (!t.unitLen) {
-        const total = t.el.getComputedTextLength()
-        if (!total) return
-        t.unitLen = total / REPEATS
+        t.unitLen = fill(t.el, t.unit)
+        if (!t.unitLen) return
+        t.offset = -t.unitLen
       }
-      t.offset -= t.speed * dt
+
+      // Forward along the path: toward the mark, then away from it.
+      t.offset += t.speed * dt
       // Wrap by exactly one repeat so the loop never shows a seam.
-      if (t.offset <= -t.unitLen) t.offset += t.unitLen
+      if (t.offset >= 0) t.offset -= t.unitLen
+
       t.el.setAttribute('startOffset', t.offset.toFixed(2))
     })
 
