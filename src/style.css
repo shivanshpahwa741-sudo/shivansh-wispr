@@ -756,3 +756,29 @@ a {
     display: none;
   }
 }
+
+/* ---------------------------------------------------------------
+   Hero word morph
+   --------------------------------------------------------------- */
+.morph {
+  display: inline-block;
+  white-space: pre-wrap;
+  color: var(--ink-50);
+  font-style: normal;
+  transition: color 0.5s var(--ease);
+  will-change: contents;
+}
+
+.morph.is-resolved {
+  color: var(--ink);
+  font-style: italic;
+}
+
+.display .morph {
+  max-width: none;
+}
+
+.morph-lead {
+  display: inline-block;
+  transition: opacity 0.3s var(--ease);
+}

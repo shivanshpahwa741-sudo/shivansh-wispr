@@ -1,6 +1,13 @@
 import './style.css'
+import { initMorph } from './morph.js'
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+initMorph(
+  document.getElementById('morph'),
+  reduceMotion,
+  document.getElementById('morphLead')
+)
 
 /* Sticky nav hairline ------------------------------------------------ */
 const nav = document.getElementById('nav')
