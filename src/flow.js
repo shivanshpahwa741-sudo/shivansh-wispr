@@ -1,24 +1,34 @@
 /* ------------------------------------------------------------------
    Hero flow band.
 
-   Same idea as Flow's own hero: text set on an SVG <textPath> and
-   scrolled along a curve. "unstructured data" rides the loop on the
-   left, passes through the mark, and leaves on the right as
-   "actionable insights" in cream on a black ribbon.
+   Same mechanism as Flow's own hero: text on an SVG <textPath>,
+   scrolled along a curve by animating startOffset. "unstructured data"
+   rides the loop on the left, passes through the mark, and leaves on
+   the right as "actionable insights" in cream on a black ribbon.
 
-   Travel runs forward along each path, so the text moves toward the
-   mark and then away from it, the direction the curves are drawn.
+   Driven by SMIL, deliberately.
 
-   Driven from requestAnimationFrame rather than SMIL. SMIL's document
-   timeline would not start in testing: animationsPaused() reported
-   false while getCurrentTime() stayed pinned at zero, and
-   unpauseAnimations() did not revive it.
+   A requestAnimationFrame version looked correct and then froze: rAF is
+   throttled to zero frames a second whenever the tab or window is
+   backgrounded or occluded, so the band would sit still while the page
+   was plainly on screen. SMIL runs on the browser's own animation
+   timeline and is not subject to that.
 
-   No visible reset: the number of repeats is computed from the real
-   path length so the phrase always overruns the curve, and the offset
-   wraps by exactly one measured repeat width. Shifting by one whole
-   repeat looks identical to not shifting at all.
+   An earlier SMIL attempt also failed, for a reason worth recording:
+   an IntersectionObserver called svg.pauseAnimations() while the band
+   was still below the fold, which freezes the document timeline before
+   it has ever started, and unpauseAnimations() will not revive it.
+   So nothing here ever pauses the timeline. There is no observer and
+   no visibilitychange handler. The browser already stops compositing
+   offscreen work on its own.
+
+   No visible reset: the repeat count comes from the real measured path
+   length so the phrase always overruns the curve, and one animation
+   cycle advances by exactly one repeat width. Shifting by a whole
+   repeat is indistinguishable from not shifting.
    ------------------------------------------------------------------ */
+
+const SVG_NS = 'http://www.w3.org/2000/svg'
 
 const RAW_UNIT = 'unstructured data   ·   '
 const CLEAN_UNIT = 'actionable insights   ·   '
@@ -27,29 +37,37 @@ const CLEAN_UNIT = 'actionable insights   ·   '
 const RAW_SPEED = 78
 const CLEAN_SPEED = 64
 
-const MAX_STEP = 0.05 // clamp the delta so a backgrounded tab cannot jump
-
 /**
- * Fills a textPath with enough repeats to overrun its curve, and
- * returns the width of a single repeat.
+ * Fills a textPath with enough repeats to overrun its curve, and drives
+ * it with a freshly created <animate>. Returns nothing; the element is
+ * left animating.
  */
-function fill(textPath, unit) {
-  const pathId = textPath.dataset.path
-  const path = pathId && document.getElementById(pathId)
-  if (!path) return 0
+function drive(textPath, unit, speed) {
+  const path = document.getElementById(textPath.dataset.path)
+  if (!path) return
 
-  // Measure one repeat first.
+  // Drop any previous driver before re-measuring.
+  textPath.querySelectorAll('animate').forEach((n) => n.remove())
+
+  // Measure one repeat, then lay down enough to overrun the curve.
   textPath.textContent = unit
   const unitLen = textPath.getComputedTextLength()
-  if (!unitLen) return 0
+  if (!unitLen) return
 
-  // Overrun the curve by a full extra screen of text in both
-  // directions, so a wrap can never expose the end of the string.
-  const pathLen = path.getTotalLength()
-  const repeats = Math.ceil(pathLen / unitLen) + 3
-
+  const repeats = Math.ceil(path.getTotalLength() / unitLen) + 3
   textPath.textContent = unit.repeat(repeats)
-  return unitLen
+
+  // Forward along the path: toward the mark, then away from it.
+  const animate = document.createElementNS(SVG_NS, 'animate')
+  animate.setAttribute('attributeName', 'startOffset')
+  animate.setAttribute('values', `-${unitLen.toFixed(2)};0`)
+  animate.setAttribute('dur', `${(unitLen / speed).toFixed(3)}s`)
+  animate.setAttribute('repeatCount', 'indefinite')
+  animate.setAttribute('calcMode', 'linear')
+
+  // Appending an <animate> that is already fully configured starts it,
+  // which avoids relying on beginElement against a cold timeline.
+  textPath.appendChild(animate)
 }
 
 export function initFlow(band, reduceMotion) {
@@ -62,70 +80,33 @@ export function initFlow(band, reduceMotion) {
 
   if (!tracks.length) return
 
-  const measure = () => {
+  if (reduceMotion) {
+    // Lay the text down and leave it completely still.
     tracks.forEach((t) => {
-      t.unitLen = fill(t.el, t.unit)
-      // Start one repeat back so the curve is already full at frame one.
-      t.offset = t.offset ?? -(t.unitLen || 0)
-      t.el.setAttribute('startOffset', (t.offset || 0).toFixed(2))
+      const path = document.getElementById(t.el.dataset.path)
+      t.el.textContent = t.unit
+      const unitLen = t.el.getComputedTextLength()
+      if (!unitLen || !path) return
+      const repeats = Math.ceil(path.getTotalLength() / unitLen) + 1
+      t.el.textContent = t.unit.repeat(repeats)
     })
+    return
   }
 
-  measure()
-  // Web fonts change the measurement, so redo it once they land.
-  if (document.fonts?.ready) document.fonts.ready.then(measure)
-  window.addEventListener('resize', measure, { passive: true })
+  const run = () => tracks.forEach((t) => drive(t.el, t.unit, t.speed))
 
-  if (reduceMotion) return
+  run()
+  // The web font changes the measurement, so lay it down again once it
+  // lands. Re-running replaces the driver rather than stacking one.
+  if (document.fonts?.ready) document.fonts.ready.then(run)
 
-  let rafId = null
-  let last = 0
-
-  const tick = (now) => {
-    const dt = last ? Math.min((now - last) / 1000, MAX_STEP) : 0
-    last = now
-
-    tracks.forEach((t) => {
-      // The first measurement can come back zero if it lands before the
-      // web font and the first layout. Retry rather than sit still.
-      if (!t.unitLen) {
-        t.unitLen = fill(t.el, t.unit)
-        if (!t.unitLen) return
-        t.offset = -t.unitLen
-      }
-
-      // Forward along the path: toward the mark, then away from it.
-      t.offset += t.speed * dt
-      // Wrap by exactly one repeat so the loop never shows a seam.
-      if (t.offset >= 0) t.offset -= t.unitLen
-
-      t.el.setAttribute('startOffset', t.offset.toFixed(2))
-    })
-
-    rafId = requestAnimationFrame(tick)
-  }
-
-  const start = () => {
-    if (rafId !== null) return
-    last = 0
-    rafId = requestAnimationFrame(tick)
-  }
-
-  const stop = () => {
-    if (rafId === null) return
-    cancelAnimationFrame(rafId)
-    rafId = null
-  }
-
-  // Never animate a band that is offscreen or on a hidden tab.
-  const io = new IntersectionObserver(
-    (entries) => entries.forEach((e) => (e.isIntersecting ? start() : stop())),
-    { threshold: 0 }
+  let resizeTimer = null
+  window.addEventListener(
+    'resize',
+    () => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(run, 180)
+    },
+    { passive: true }
   )
-  io.observe(band)
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stop()
-    else if (band.getBoundingClientRect().bottom > 0) start()
-  })
 }
