@@ -1,13 +1,9 @@
 import './style.css'
-import { initMorph } from './morph.js'
+import { initFlow } from './flow.js'
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-initMorph(
-  document.getElementById('morph'),
-  reduceMotion,
-  document.getElementById('morphLead')
-)
+initFlow(document.getElementById('flowband'), reduceMotion)
 
 /* Sticky nav hairline ------------------------------------------------ */
 const nav = document.getElementById('nav')

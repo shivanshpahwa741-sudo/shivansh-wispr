@@ -62,20 +62,18 @@
       <section class="hero">
         <div class="wrap hero-grid">
           <div>
-            <p class="eyebrow">Shivansh Pahwa &middot; Growth analytics &middot; Bengaluru</p>
+            <p class="eyebrow">Shivansh Pahwa &middot; Bengaluru</p>
 
             <h1 class="display">
-              <span class="morph-lead" id="morphLead">I turn</span><br />
-              <span class="morph" id="morph">unstructured data</span>
+              I am 19. I have worked on growth at <em>four startups.</em>
             </h1>
 
             <p class="lede">
-              I am 19 and I have worked on growth at four startups. At Kyra I
-              built the signup analytics and found that 85% of rider signups
-              converted against 14% on the driver side, which is 42 drivers out
-              of more than 300. Rider acquisition was already working, so more
-              of it would not have moved revenue. The roadmap went onto driver
-              flow instead. That is the work I want to do here:
+              At Kyra I built the signup analytics and found that 85% of rider
+              signups converted against 14% on the driver side, which is 42
+              drivers out of more than 300. Rider acquisition was already
+              working, so more of it would not have moved revenue. The roadmap
+              went onto driver flow instead. That is the work I want to do here:
               <strong>find the number that is actually binding</strong>, then
               change what the team builds.
             </p>
@@ -129,6 +127,88 @@
               </figcaption>
             </figure>
           </div>
+        </div>
+      </section>
+
+
+      <!-- 1b. Flow band ----------------------------------------- -->
+      <section class="flowband" id="flowband" aria-label="Unstructured data resolving into a finished read">
+        <svg viewBox="0 0 1200 430" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <defs>
+            <path
+              id="rawLoop"
+              fill="none"
+              d="M-40 118 C 130 58, 286 66, 330 162 C 374 258, 288 332, 206 300 C 128 270, 152 180, 272 160 C 428 134, 526 252, 566 352"
+            />
+            <path
+              id="cleanRibbon"
+              fill="none"
+              d="M636 356 C 790 352, 908 304, 1046 272 C 1124 254, 1180 246, 1250 240"
+            />
+            <linearGradient id="fadeRaw" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#fff" stop-opacity="0" />
+              <stop offset="0.05" stop-color="#fff" stop-opacity="1" />
+              <stop offset="1" stop-color="#fff" stop-opacity="1" />
+            </linearGradient>
+            <linearGradient id="fadeClean" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#fff" stop-opacity="1" />
+              <stop offset="0.94" stop-color="#fff" stop-opacity="1" />
+              <stop offset="1" stop-color="#fff" stop-opacity="0" />
+            </linearGradient>
+            <mask id="maskRaw">
+              <rect x="0" y="0" width="1200" height="430" fill="url(#fadeRaw)" />
+            </mask>
+            <mask id="maskClean">
+              <rect x="0" y="0" width="1200" height="430" fill="url(#fadeClean)" />
+            </mask>
+          </defs>
+
+          <!-- raw, unresolved -->
+          <g mask="url(#maskRaw)">
+            <text class="flow-raw">
+              <textPath href="#rawLoop" startOffset="0%" data-raw>
+                <animate
+                  attributeName="startOffset"
+                  values="0%;-50%"
+                  dur="54s"
+                  repeatCount="indefinite"
+                />
+              </textPath>
+            </text>
+          </g>
+
+          <!-- the ribbon the finished read travels on -->
+          <use href="#cleanRibbon" class="flow-ribbon" />
+          <g mask="url(#maskClean)">
+            <text class="flow-clean">
+              <textPath href="#cleanRibbon" startOffset="0%" data-clean>
+                <animate
+                  attributeName="startOffset"
+                  values="0%;-50%"
+                  dur="68s"
+                  repeatCount="indefinite"
+                />
+              </textPath>
+            </text>
+          </g>
+
+          <!-- the mark everything passes through -->
+          <g class="flow-mark">
+            <rect x="546" y="318" width="112" height="74" rx="37" />
+            <g class="flow-mark-bars">
+              <rect x="574" y="364" width="8" height="14" rx="4" />
+              <rect x="588" y="352" width="8" height="26" rx="4" />
+              <rect x="602" y="340" width="8" height="38" rx="4" />
+              <rect x="616" y="348" width="8" height="30" rx="4" />
+            </g>
+          </g>
+        </svg>
+
+        <div class="flow-badge">
+          <span class="flow-badge-tick" aria-hidden="true">
+            <svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3.2L13 5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span data-badge>Found the binding constraint</span>
         </div>
       </section>
 
