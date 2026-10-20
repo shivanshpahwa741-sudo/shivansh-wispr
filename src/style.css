@@ -883,3 +883,138 @@ a {
     transition: none;
   }
 }
+
+/* ---------------------------------------------------------------
+   Voices: a scattered card field on ink, after Flow's testimonial wall
+   --------------------------------------------------------------- */
+.voices {
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(64px, 9vw, 120px) 0 clamp(72px, 10vw, 136px);
+  overflow: hidden;
+}
+
+.voices .section-title {
+  color: var(--paper);
+}
+
+.voices .prose {
+  color: var(--paper-70);
+}
+
+.voice-field {
+  display: grid;
+  gap: clamp(28px, 4.5vw, 56px);
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.voice-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.76fr) minmax(0, 1.24fr);
+  gap: clamp(20px, 3vw, 40px);
+  align-items: center;
+  margin: 0;
+  padding: clamp(20px, 2.4vw, 28px);
+  border-radius: var(--r-card);
+  color: var(--ink);
+  will-change: transform;
+}
+
+.voice-card.is-reversed {
+  grid-template-columns: minmax(0, 1.24fr) minmax(0, 0.76fr);
+}
+
+.voice-card.is-reversed .voice-photo {
+  order: 2;
+}
+
+.voice-card.is-lavender {
+  background: var(--lavender);
+  transform: rotate(-1.1deg);
+  max-width: 880px;
+}
+
+.voice-card.is-amber {
+  background: var(--amber);
+  transform: rotate(1.3deg);
+  max-width: 820px;
+  margin-left: auto;
+}
+
+.voice-photo {
+  border-radius: 22px;
+  overflow: hidden;
+  background: rgba(26, 26, 26, 0.08);
+}
+
+.voice-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  display: block;
+}
+
+.voice-body blockquote {
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 2.3vw, 1.72rem);
+  line-height: 1.26;
+  letter-spacing: -0.008em;
+  margin: 0;
+  quotes: '\201C' '\201D';
+}
+
+.voice-body blockquote::before {
+  content: open-quote;
+}
+
+.voice-body blockquote::after {
+  content: close-quote;
+}
+
+.voice-body figcaption {
+  margin-top: clamp(18px, 2.4vw, 28px);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.voice-body figcaption b {
+  display: block;
+  font-weight: 700;
+}
+
+.voice-body figcaption span {
+  color: rgba(26, 26, 26, 0.62);
+}
+
+@media (max-width: 760px) {
+  .voice-card,
+  .voice-card.is-reversed {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .voice-card.is-reversed .voice-photo {
+    order: 0;
+  }
+
+  .voice-card.is-lavender,
+  .voice-card.is-amber {
+    transform: none;
+    max-width: none;
+    margin-left: 0;
+  }
+
+  .voice-photo img {
+    aspect-ratio: 16 / 11;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-card {
+    transform: none !important;
+  }
+}

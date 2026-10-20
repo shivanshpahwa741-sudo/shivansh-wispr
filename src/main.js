@@ -75,3 +75,46 @@ if (!reduceMotion) {
     })
   })
 }
+
+/* Voices parallax ----------------------------------------------------- */
+if (!reduceMotion) {
+  const cards = [...document.querySelectorAll('.voice-card[data-depth]')]
+  if (cards.length) {
+    const base = new WeakMap()
+    cards.forEach((c) => base.set(c, getComputedStyle(c).transform))
+
+    let ticking = false
+    let active = false
+
+    const place = () => {
+      ticking = false
+      const mid = window.innerHeight / 2
+      cards.forEach((card) => {
+        const rect = card.getBoundingClientRect()
+        // -1 below the fold, 0 at centre, 1 above it
+        const progress = (mid - (rect.top + rect.height / 2)) / window.innerHeight
+        const shift = progress * Number(card.dataset.depth) * 2
+        card.style.translate = `0 ${shift.toFixed(2)}px`
+      })
+    }
+
+    const onMove = () => {
+      if (ticking || !active) return
+      ticking = true
+      requestAnimationFrame(place)
+    }
+
+    const vio = new IntersectionObserver(
+      (entries) => {
+        active = entries.some((e) => e.isIntersecting)
+        if (active) onMove()
+      },
+      { rootMargin: '20% 0px' }
+    )
+    cards.forEach((c) => vio.observe(c))
+
+    window.addEventListener('scroll', onMove, { passive: true })
+    window.addEventListener('resize', onMove, { passive: true })
+    place()
+  }
+}
