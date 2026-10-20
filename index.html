@@ -167,13 +167,7 @@
           <!-- raw, unresolved -->
           <g mask="url(#maskRaw)">
             <text class="flow-raw">
-              <textPath href="#rawLoop" startOffset="0%" data-raw>
-                <animate
-                  attributeName="startOffset"
-                  values="0%;-50%"
-                  dur="54s"
-                  repeatCount="indefinite"
-                />
+              <textPath href="#rawLoop" startOffset="0" data-raw>
               </textPath>
             </text>
           </g>
@@ -182,13 +176,7 @@
           <use href="#cleanRibbon" class="flow-ribbon" />
           <g mask="url(#maskClean)">
             <text class="flow-clean">
-              <textPath href="#cleanRibbon" startOffset="0%" data-clean>
-                <animate
-                  attributeName="startOffset"
-                  values="0%;-50%"
-                  dur="68s"
-                  repeatCount="indefinite"
-                />
+              <textPath href="#cleanRibbon" startOffset="0" data-clean>
               </textPath>
             </text>
           </g>
@@ -204,13 +192,6 @@
             </g>
           </g>
         </svg>
-
-        <div class="flow-badge">
-          <span class="flow-badge-tick" aria-hidden="true">
-            <svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3.2L13 5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-          <span data-badge>Found the binding constraint</span>
-        </div>
       </section>
 
       <!-- 2. Proof strip ----------------------------------------- -->
